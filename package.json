@@ -1,8 +1,14 @@
 {
   "name": "pricing-maestro-backend",
   "version": "1.0.0",
+  "description": "Pricing Maestro AI backend",
   "type": "module",
+  "main": "api/chat.js",
+  "scripts": {
+    "dev": "node api/chat.js",
+    "start": "node api/chat.js"
+  },
   "dependencies": {
-    "openai": "4.52.0"
+    "openai": "^4.52.0"
   }
 }
