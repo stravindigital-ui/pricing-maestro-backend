@@ -8,13 +8,16 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { message } = req.body;
+    // Parse body safely
+    const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+
+    const { message } = body;
 
     if (!message) {
       return res.status(400).json({ error: "Missing message" });
     }
 
-    // Connect to OpenAI using Vercel environment variable
+    // Initialize OpenAI with project key
     const client = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY
     });
@@ -25,7 +28,7 @@ export default async function handler(req, res) {
         {
           role: "system",
           content:
-            "You are Pricing Maestro AI — a friendly and highly experienced pricing strategist. Introduce yourself warmly when the conversation starts and ask what pricing challenge they want help with."
+            "You are Pricing Maestro AI — a friendly pricing strategist who helps with subscription pricing, margins, price testing, and revenue strategy."
         },
         {
           role: "user",
@@ -34,15 +37,15 @@ export default async function handler(req, res) {
       ]
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       reply: completion.choices[0].message.content
     });
 
   } catch (error) {
     console.error("SERVER ERROR:", error);
-    res.status(500).json({
-      error: "Internal server error",
-      details: error.message
+    return res.status(500).json({
+      error: "Server Error",
+      detail: error.message || error.toString()
     });
   }
 }
