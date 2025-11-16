@@ -5,6 +5,17 @@ const client = new OpenAI({
 });
 
 export default async function handler(req, res) {
+  // --- REQUIRED CORS HEADERS ---
+  res.setHeader("Access-Control-Allow-Origin", "https://stravindigital.com");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  // Handle preflight
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
+  // Only allow POST
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
